@@ -21,24 +21,25 @@ const searchTemplate = (onSearch, result=undefined) => html`
 `
 
 export async function displaySearch(context) {
-    const section = searchTemplate(onSearch);
+    let section;
+    if (context.path === '/search') {
+        section = searchTemplate(onSearch);
+    } else {
+        const searchQuery = context.querystring.split('=')[1];
+        const data = searchQuery ? await search(searchQuery) : [];
+        section = searchTemplate(onSearch, data);
+    }
     context.render(section);
 
-    async function onSearch(event) {
+    function onSearch(event) {
         event.preventDefault();
-        const data = new FormData(event.target);
-        const searchQuery = data.get('search');
+        const searchField = document.getElementById('searchField');
+        const query = searchField.value;
 
-        if (!searchQuery) {
+        if (!query) {
             return alert('Field is mandatory!');
         }
 
-        const result = await search(searchQuery);
-        displayResult(result)
-    }
-
-    function displayResult(result) {
-        const sectionWithResult = searchTemplate(onSearch, result);
-        context.render(sectionWithResult);
+        context.redirect(`/search?query=${query}`)
     }
 }
