@@ -25,6 +25,7 @@ export async function displaySearch(context) {
     if (context.path === '/search') {
         section = searchTemplate(onSearch);
     } else {
+        console.log(context)
         const searchQuery = context.querystring.split('=')[1];
         const data = searchQuery ? await search(searchQuery) : [];
         section = searchTemplate(onSearch, data);
@@ -39,7 +40,7 @@ export async function displaySearch(context) {
         if (!query) {
             return alert('Field is mandatory!');
         }
-
-        context.redirect(`/search?query=${query}`)
+        const encodeQuery = encodeURIComponent(query);
+        context.redirect('/search?query=' + encodeQuery);
     }
 }
