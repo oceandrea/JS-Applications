@@ -1,2 +1,2 @@
 # JS-Applications
-JavaScript Applications
+Tasks from JavaScript Applications Course at SoftUni
